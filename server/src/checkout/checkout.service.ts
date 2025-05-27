@@ -1,9 +1,56 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCheckoutDto } from './dto/create-checkout.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { ProductsRepository } from 'src/products/products.repository';
+import {
+  CartItem,
+  CartItemDocument,
+} from 'src/cart-items/schema/cart-item.schema';
+// import { Product, ProductDocument } from 'src/products/schema/product.schema';
+import { CheckoutDto } from './dto/checkout.dto';
+import { CartItemsRepository } from 'src/cart-items/cart-items.repository';
 
 @Injectable()
 export class CheckoutService {
-  create(createCheckoutDto: CreateCheckoutDto) {
-    return 'This action adds a new checkout';
+  constructor(
+    private readonly productsRepository: ProductsRepository,
+    private readonly cartItemsRepository: CartItemsRepository,
+    @InjectModel(CartItem.name) private cartItemModel: Model<CartItemDocument>,
+  ) {}
+
+  async checkout(dto: CheckoutDto) {
+    for (const item of dto.cartItems) {
+      const product = await this.productsRepository.findById(item.product);
+      if (!product) {
+        throw new NotFoundException(`Product ${item.product} not found`);
+      }
+
+      if (item.quantity > product.stock) {
+        throw new BadRequestException(
+          `Quantity for ${product.name} exceeds stock`,
+        );
+      }
+
+      // หัก stock
+      product.stock -= item.quantity;
+      await product.save();
+
+      // ลบ CartItem
+      await this.cartItemsRepository.deleteById(item.product);
+    }
+
+    if (dto.paymentMethod === 'cash') {
+      return { message: 'Checkout successful by cash' };
+    } else if (dto.paymentMethod === 'card') {
+      return { message: 'Checkout successful by card' };
+    } else if (dto.paymentMethod === 'qr') {
+      return { message: 'Checkout successful by QR code' };
+    } else {
+      throw new BadRequestException('Invalid payment method');
+    }
   }
 }

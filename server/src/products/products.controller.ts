@@ -1,26 +1,26 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
+import { ProductsService } from './products.service';
 import { ProductsRepository } from './products.repository';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productRepository: ProductsRepository) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly productsRepository: ProductsRepository,
+  ) {}
 
   @Get()
-  getAllProducts() {
-    return this.productRepository.findAllProducts();
+  findAll() {
+    return this.productsRepository.findAll();
   }
 
   @Get('search')
-  getProductsBySearching(@Query('keyword') keyword: string) {
-    if (!keyword) {
-      return this.productRepository.findAllProducts();
-    }
-
-    return this.productRepository.searchProducts(keyword);
+  search(@Query('keyword') keyword: string) {
+    return this.productsService.getProductsBySearching(keyword);
   }
 
   @Get(':id')
-  getProductById(@Param('id') id: string) {
-    return this.productRepository.findProductById(id);
+  findById(@Param('id') id: string) {
+    return this.productsService.getProductById(id);
   }
 }

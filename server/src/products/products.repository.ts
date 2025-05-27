@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product, ProductDocument } from './schema/product.schema';
@@ -6,20 +6,16 @@ import { Product, ProductDocument } from './schema/product.schema';
 @Injectable()
 export class ProductsRepository {
   constructor(
-    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    @InjectModel(Product.name) private productsModel: Model<ProductDocument>,
   ) {}
 
-  async findAllProducts(): Promise<Product[]> {
-    const products = await this.productModel.find().lean().exec();
-    if (products.length === 0) {
-      throw new NotFoundException('No products found');
-    }
-    return products;
+  async findAll(): Promise<Product[]> {
+    return this.productsModel.find().lean().exec();
   }
 
-  async searchProducts(keyword: string): Promise<Product[]> {
+  async findByKeyword(keyword: string): Promise<Product[]> {
     const regex = new RegExp(keyword, 'i'); // case-insensitive
-    return this.productModel
+    return this.productsModel
       .find({
         $or: [{ name: { $regex: regex } }, { description: { $regex: regex } }],
       })
@@ -27,11 +23,7 @@ export class ProductsRepository {
       .exec();
   }
 
-  async findProductById(id: string): Promise<Product> {
-    const product = await this.productModel.findById(id).lean().exec();
-    if (!product) {
-      throw new NotFoundException(`Product with id ${id} not found`);
-    }
-    return product;
+  async findById(id: string): Promise<ProductDocument | null> {
+    return this.productsModel.findById(id).exec();
   }
 }

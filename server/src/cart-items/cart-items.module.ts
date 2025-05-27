@@ -4,6 +4,7 @@ import { CartItemsController } from './cart-items.controller';
 import { CartItemsService } from './cart-items.service';
 import { CartItemsRepository } from './cart-items.repository';
 import { CartItem, CartItemSchema } from './schema/cart-item.schema';
+import { ProductsRepository } from 'src/products/products.repository';
 import { Product, ProductSchema } from 'src/products/schema/product.schema';
 
 @Module({
@@ -14,6 +15,6 @@ import { Product, ProductSchema } from 'src/products/schema/product.schema';
     ]),
   ],
   controllers: [CartItemsController],
-  providers: [CartItemsService, CartItemsRepository],
+  providers: [CartItemsService, CartItemsRepository, ProductsRepository],
 })
 export class CartItemsModule {}

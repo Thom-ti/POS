@@ -1,15 +1,43 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CartItem, CartItemDocument } from './schema/cart-item.schema';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { CartItemsRepository } from './cart-items.repository';
+import { ProductsRepository } from 'src/products/products.repository';
+import { CreateCartItemDto } from './dto/create-cart-item.dto';
 // import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
 @Injectable()
 export class CartItemsService {
   constructor(
-    @InjectModel(CartItem.name)
-    private readonly cartItemModel: Model<CartItemDocument>,
+    private readonly cartItemsRepository: CartItemsRepository,
+    private readonly productsRepository: ProductsRepository,
   ) {}
+
+  async addItemToCart(dto: CreateCartItemDto) {
+    // check product exists
+    const product = await this.productsRepository.findById(dto.product);
+    if (!product) {
+      throw new NotFoundException(`Product with id ${dto.product} not found`);
+    }
+
+    // check quantity and stock
+    if (dto.quantity > product.stock) {
+      throw new BadRequestException(
+        `Quantity exceeds available stock (${product.stock})`,
+      );
+    }
+
+    // check cartItem
+    const checkCartItem = await this.cartItemsRepository.findById(dto.product);
+    if (checkCartItem) {
+      throw new ConflictException('This item already exists in cart');
+    }
+
+    return this.cartItemsRepository.create(dto);
+  }
 
   // update(id: number, updateCartItemDto: UpdateCartItemDto) {
   //   return `This action updates a #${id} cartItem`;
