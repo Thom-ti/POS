@@ -1,27 +1,42 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly productsRepository: ProductsRepository) {}
+  constructor(
+    private readonly logger: Logger,
+    private readonly productsRepository: ProductsRepository,
+  ) {}
 
   getProductsBySearching(keyword: string) {
-    if (!keyword || keyword.trim() === '') {
-      throw new BadRequestException('Keyword is required');
-    }
+    try {
+      if (!keyword || keyword.trim() === '') {
+        throw new BadRequestException('Keyword is required');
+      }
 
-    return this.productsRepository.findByKeyword(keyword);
+      return this.productsRepository.findByKeyword(keyword);
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Something went wrong');
+    }
   }
 
   async getProductById(id: string) {
-    const product = await this.productsRepository.findById(id);
-    if (!product) {
-      throw new NotFoundException(`Product with id ${id} not found`);
+    try {
+      const product = await this.productsRepository.findById(id);
+      if (!product) {
+        throw new NotFoundException(`Product with id ${id} not found`);
+      }
+      return product;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException('Something went wrong');
     }
-    return product;
   }
 }

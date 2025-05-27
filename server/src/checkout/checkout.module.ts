@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
@@ -20,6 +20,7 @@ import { Product, ProductSchema } from 'src/products/schema/product.schema';
   ],
   controllers: [CheckoutController],
   providers: [
+    Logger,
     CheckoutService,
     CheckoutRepository,
     CartItemsRepository,

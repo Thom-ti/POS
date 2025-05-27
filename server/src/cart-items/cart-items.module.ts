@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CartItemsController } from './cart-items.controller';
 import { CartItemsService } from './cart-items.service';
@@ -15,6 +15,11 @@ import { Product, ProductSchema } from 'src/products/schema/product.schema';
     ]),
   ],
   controllers: [CartItemsController],
-  providers: [CartItemsService, CartItemsRepository, ProductsRepository],
+  providers: [
+    Logger,
+    CartItemsService,
+    CartItemsRepository,
+    ProductsRepository,
+  ],
 })
 export class CartItemsModule {}
