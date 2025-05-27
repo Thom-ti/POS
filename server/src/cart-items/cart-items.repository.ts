@@ -24,7 +24,7 @@ export class CartItemsRepository {
     return this.cartItemsModel.find().populate('product').exec();
   }
 
-  async findById(id: string): Promise<CartItem | null> {
+  async findOne(id: string): Promise<CartItem | null> {
     return this.cartItemsModel.findOne({ product: id }).lean().exec();
   }
 

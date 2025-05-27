@@ -5,14 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { ProductsRepository } from 'src/products/products.repository';
-import {
-  CartItem,
-  CartItemDocument,
-} from 'src/cart-items/schema/cart-item.schema';
-// import { Product, ProductDocument } from 'src/products/schema/product.schema';
 import { CheckoutDto } from './dto/checkout.dto';
 import { CartItemsRepository } from 'src/cart-items/cart-items.repository';
 
@@ -22,7 +15,6 @@ export class CheckoutService {
     private readonly logger: Logger,
     private readonly productsRepository: ProductsRepository,
     private readonly cartItemsRepository: CartItemsRepository,
-    @InjectModel(CartItem.name) private cartItemModel: Model<CartItemDocument>,
   ) {}
 
   async checkout(dto: CheckoutDto) {
@@ -44,7 +36,7 @@ export class CheckoutService {
         await product.save();
 
         // ลบ CartItem
-        await this.cartItemsRepository.deleteById(item.product);
+        await this.cartItemsRepository.deleteById(item.cartItemId);
       }
 
       if (dto.paymentMethod === 'cash') {

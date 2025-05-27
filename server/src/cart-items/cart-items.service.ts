@@ -35,9 +35,7 @@ export class CartItemsService {
       }
 
       // check cartItem
-      const checkCartItem = await this.cartItemsRepository.findById(
-        dto.product,
-      );
+      const checkCartItem = await this.cartItemsRepository.findOne(dto.product);
       if (checkCartItem) {
         throw new ConflictException('This item already exists in cart');
       }
