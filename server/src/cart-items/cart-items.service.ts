@@ -28,6 +28,10 @@ export class CartItemsService {
       }
 
       // check quantity and stock
+      if (product.stock === 0) {
+        throw new BadRequestException('Product is out of stock');
+      }
+
       if (dto.quantity > product.stock) {
         throw new BadRequestException(
           `Quantity exceeds available stock (${product.stock})`,
