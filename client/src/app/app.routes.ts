@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { ProductListComponent } from './features/product/product-list/product-list.component';
 
 export const routes: Routes = [
   {
@@ -11,10 +12,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./features/product/product-list/product-list.component').then(
-            (m) => m.ProductListComponent
-          ),
+        component: ProductListComponent,
       },
       {
         path: ':id',

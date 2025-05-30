@@ -1,15 +1,16 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-product-item',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './product-item.component.html',
   styleUrl: './product-item.component.css',
 })
 export class ProductItemComponent implements OnInit {
-  productItem = '';
+  productItem: Product | null = null;
   productId!: string;
   private destroyRef = inject(DestroyRef);
 
