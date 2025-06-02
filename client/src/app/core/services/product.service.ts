@@ -20,4 +20,10 @@ export class ProductService {
   getProductById(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.apiUrl}/${id}`);
   }
+
+  getProductsBySearching(searchTerm: string): Observable<Product[]> {
+    return this.http.get<Product[]>(
+      `${this.apiUrl}/search?keyword=${searchTerm}`
+    );
+  }
 }

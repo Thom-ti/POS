@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  inject,
+  Output,
+} from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { Product } from '../../../core/models/product.model';
+import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-search',
@@ -9,12 +17,26 @@ import { FormsModule } from '@angular/forms';
 })
 export class SearchComponent {
   searchTerm: string = '';
+  @Output() productsFound = new EventEmitter<Product[]>();
+  private destroyRef = inject(DestroyRef);
 
-  onSubmit() {
-    if (this.searchTerm.trim()) {
-      console.log('Searching for:', this.searchTerm);
-      // TODO: Emit or call API here
-      
-    }
+  constructor(private productService: ProductService) {}
+
+  onSubmit(): void {
+    const keyword = this.searchTerm.trim();
+    const subscription = this.productService
+      .getProductsBySearching(keyword)
+      .subscribe((data) => {
+        this.productsFound.emit(data);
+      });
+
+    this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  onClear(form: NgForm): void {
+    this.searchTerm = '';
+    form.resetForm();
+
+    this.productsFound.emit();
   }
 }

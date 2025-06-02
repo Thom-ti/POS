@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
     <div class="w-full sm:flex-1">
-      <app-search />
+      <app-search (productsFound)="onProductsFound($event)" />
     </div>
     <div
       class="p-2 rounded-full bg-gray-300 text-white shadow-inner cursor-pointer"
@@ -15,8 +15,11 @@
   <div
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 items-stretch"
   >
-    @for (product of products; track product._id) {
+    @if (filteredProducts) { @for (product of filteredProducts; track
+    product._id) {
     <app-product-card [product]="product"></app-product-card>
-    }
+    } } @else { @for (product of products; track product._id) {
+    <app-product-card [product]="product"></app-product-card>
+    } }
   </div>
 </div>

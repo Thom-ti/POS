@@ -1,9 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
-import { RouterLink } from '@angular/router';
-import { SearchComponent } from "../search/search.component";
-import { ProductCardComponent } from "../product-card/product-card.component";
+import { SearchComponent } from '../search/search.component';
+import { ProductCardComponent } from '../product-card/product-card.component';
 
 @Component({
   selector: 'app-product-list',
@@ -13,6 +12,7 @@ import { ProductCardComponent } from "../product-card/product-card.component";
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
+  filteredProducts!: Product[];
   private destroyRef = inject(DestroyRef);
 
   constructor(private productService: ProductService) {}
@@ -27,5 +27,9 @@ export class ProductListComponent implements OnInit {
     });
 
     this.destroyRef.onDestroy(() => subscription.unsubscribe());
+  }
+
+  onProductsFound(results: Product[]) {
+    this.filteredProducts = results;
   }
 }
