@@ -1,38 +1,25 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-
 import { CartService } from '../../core/services/cart.service';
-import { CartItem } from '../../core/models/cart-item.model';
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [RouterLink],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
 })
-export class CartComponent implements OnInit {
-  cartItems: CartItem[] = [];
-  private destroyRef = inject(DestroyRef);
+export class CartComponent {
+  private cartService = inject(CartService);
+  cartItems = this.cartService.cartItems;
+  totalPrice = computed(() =>
+    this.cartItems().reduce(
+      (total, item) => total + item.product.price * item.quantity,
+      0
+    )
+  );
 
-  constructor(private cartService: CartService) {}
-
-  ngOnInit(): void {
-    this.loadCartItems();
+  constructor() {
+    this.cartService.loadCartItems();
   }
-
-  loadCartItems(): void {
-    const subscription = this.cartService.getCartItems().subscribe((data) => {
-      this.cartItems = data;
-    });
-
-    this.destroyRef.onDestroy(() => subscription.unsubscribe());
-  }
-
-  getTotalPrice(): number {
-    return this.cartItems.reduce((total, item) => {
-      return total + item.product.price * item.quantity;
-    }, 0);
-  }
-
-  // addCartItem(): void {}
 }

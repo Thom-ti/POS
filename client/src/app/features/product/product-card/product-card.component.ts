@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-card',
@@ -10,4 +11,25 @@ import { Product } from '../../../core/models/product.model';
 })
 export class ProductCardComponent {
   @Input() product!: Product;
+  quantity: number = 1;
+
+  constructor(private cartService: CartService) {}
+
+  increaseQuantity() {
+    this.quantity += 1;
+  }
+
+  decreaseQuantity() {
+    if (this.quantity <= 1) return;
+    this.quantity -= 1;
+  }
+
+  addToCart() {
+    const body = {
+      product: this.product._id,
+      quantity: this.quantity,
+    };
+
+    this.cartService.postCartItem(body);
+  }
 }

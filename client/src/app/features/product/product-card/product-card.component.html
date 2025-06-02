@@ -18,11 +18,17 @@
 
   <!-- Cart Actions (Mockup) -->
   <div class="flex items-center justify-between bg-gray-100 p-2 rounded mt-2">
-    <button class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer">
+    <button
+      class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer"
+      (click)="decreaseQuantity()"
+    >
       ➖
     </button>
-    <span class="text-sm text-gray-700">1</span>
-    <button class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer">
+    <span class="text-sm text-gray-700">{{ quantity }}</span>
+    <button
+      class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer"
+      (click)="increaseQuantity()"
+    >
       ➕
     </button>
   </div>
@@ -35,6 +41,7 @@
     </button>
     <button
       class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded text-sm cursor-pointer flex-1 text-center"
+      (click)="addToCart()"
     >
       [ + Add to Cart ]
     </button>

@@ -18,7 +18,7 @@
     </div>
 
     <!-- Cart Items -->
-    @for (cartItem of cartItems; track cartItem._id) {
+    @for (cartItem of cartItems(); track cartItem._id) {
     <div class="flex items-center gap-3 border p-3 rounded bg-gray-50">
       <!-- Image -->
       <img
@@ -57,7 +57,7 @@
   <div class="border-t p-6 space-y-4 bg-white">
     <div class="flex justify-between text-base font-semibold">
       <span>Total:</span>
-      <span class="text-green-600 text-lg"> {{ getTotalPrice() }}$ </span>
+      <span class="text-green-600 text-lg"> {{ totalPrice() }}$ </span>
     </div>
     <button
       class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded text-base font-bold cursor-pointer"
