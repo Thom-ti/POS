@@ -2,10 +2,12 @@ import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 import { RouterLink } from '@angular/router';
+import { SearchComponent } from "../search/search.component";
+import { ProductCardComponent } from "../product-card/product-card.component";
 
 @Component({
   selector: 'app-product-list',
-  imports: [RouterLink],
+  imports: [SearchComponent, ProductCardComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css',
 })

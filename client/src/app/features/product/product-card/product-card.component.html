@@ -1,0 +1,42 @@
+<div
+  class="bg-white rounded-lg shadow p-4 hover:shadow-lg flex flex-col gap-2 w-full max-w-[360px]"
+>
+  <img
+    [src]="
+      product.imageUrl || 'https://via.placeholder.com/360x160?text=No+Image'
+    "
+    alt="{{ product.name }}"
+    class="w-full h-60 object-cover object-center rounded"
+  />
+
+  <h3 class="text-lg font-semibold text-gray-800">{{ product.name }}</h3>
+  <p class="text-gray-600 text-sm">
+    Price:
+    <span class="text-blue-600 font-medium">{{ product.price }}$</span>
+  </p>
+  <p class="text-gray-500 text-sm">Stock: {{ product.stock }}</p>
+
+  <!-- Cart Actions (Mockup) -->
+  <div class="flex items-center justify-between bg-gray-100 p-2 rounded mt-2">
+    <button class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer">
+      ➖
+    </button>
+    <span class="text-sm text-gray-700">1</span>
+    <button class="bg-gray-300 text-white px-2 py-1 rounded cursor-pointer">
+      ➕
+    </button>
+  </div>
+  <div class="flex justify-between items-center mt-2 gap-2">
+    <button
+      routerLink="/products/{{ product._id }}"
+      class="bg-amber-400 hover:bg-amber-500 text-white font-semibold py-1 px-3 rounded text-sm cursor-pointer flex-1 text-center"
+    >
+      View
+    </button>
+    <button
+      class="bg-green-500 hover:bg-green-600 text-white font-semibold py-1 px-3 rounded text-sm cursor-pointer flex-1 text-center"
+    >
+      [ + Add to Cart ]
+    </button>
+  </div>
+</div>

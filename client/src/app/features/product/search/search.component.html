@@ -1,1 +1,21 @@
-<p>search works!</p>
+<form #searchForm="ngForm" (ngSubmit)="onSubmit()">
+  <div
+    class="flex w-full sm:max-w-4xl border border-dashed border-gray-400 rounded"
+  >
+    <input
+      type="text"
+      name="search"
+      [(ngModel)]="searchTerm"
+      required
+      placeholder="Search something..."
+      class="flex-1 px-4 py-2 text-gray-800 outline-none bg-transparent"
+    />
+
+    <button
+      type="submit"
+      class="px-4 py-2 bg-gray-300 text-white cursor-pointer"
+    >
+      🔍
+    </button>
+  </div>
+</form>
