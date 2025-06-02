@@ -15,9 +15,27 @@
 
 ```bash
 git clone https://github.com/Thom-ti/POS.git
+cd POS
 ```
 
-### Frontend setup
+### .env setup in `server/`
+
+```text
+PORT=8888
+MONGODB_URL=mongodb+srv://thomdev:OI8DZyaD5z6wvrQ0@cluster-ti.thoo734.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Ti
+```
+
+## Frontend & Backend setup with `docker-compose.yml`
+
+```bash
+docker-compose up --build
+```
+
+เมื่อรันเสร็จแล้ว เปิดบราวเซอร์และไปที่ `http://localhost:4200/`
+
+---
+
+<!-- ### Frontend setup
 
 ```bash
 cd client/
@@ -58,4 +76,4 @@ $ npm run start:dev
 $ npm run start
 ```
 
----
+--- -->

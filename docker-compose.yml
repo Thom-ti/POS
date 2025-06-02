@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  client:
+    container_name: client-app
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./client:/app:cached
+      - /app/node_modules
+    command: npm run start
+    depends_on:
+      - server
+
+  server:
+    container_name: nest-api
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./server:/app:cached
+      - /app/node_modules
+    command: npm run start:dev
+    environment:
+      - MONGO_URL=mongodb+srv://thomdev:OI8DZyaD5z6wvrQ0@cluster-ti.thoo734.mongodb.net/?retryWrites=true&w=majority&appName=Cluster-Ti
