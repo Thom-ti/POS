@@ -1,1 +1,68 @@
-<p>{{ cartItems }}</p>
+<div
+  class="fixed top-0 right-0 h-full w-[300px] bg-white shadow-lg border-l border-gray-200 z-50 flex flex-col"
+>
+  <!-- Header -->
+  <div class="flex justify-between items-center p-4 border-b">
+    <h2 class="text-lg font-semibold">Cart</h2>
+  </div>
+
+  <!-- Content Scroll Area -->
+  <div class="p-4 space-y-4 overflow-y-auto flex-1">
+    <!-- Header Row -->
+    <div
+      class="grid grid-cols-3 gap-2 text-sm text-gray-500 font-semibold px-1"
+    >
+      <span>Picture</span>
+      <span class="text-center">Name & Quantity</span>
+      <span class="text-right">Total Price</span>
+    </div>
+
+    <!-- Cart Items -->
+    @for (cartItem of cartItems; track cartItem._id) {
+    <div class="flex items-center gap-3 border p-3 rounded bg-gray-50">
+      <!-- Image -->
+      <img
+        [src]="
+          cartItem.product.imageUrl ||
+          'https://via.placeholder.com/360x160?text=No+Image'
+        "
+        alt="{{ cartItem.product.name }}"
+        [routerLink]="'/products/' + cartItem.product._id"
+        class="w-16 h-16 object-cover object-center rounded cursor-pointer"
+      />
+
+      <!-- Info -->
+      <div class="flex flex-col flex-1">
+        <!-- Name -->
+        <a
+          [routerLink]="'/products/' + cartItem.product._id"
+          class="font-medium text-sm hover:underline hover:text-blue-600 truncate"
+        >
+          {{ cartItem.product.name }}
+        </a>
+
+        <!-- Quantity & Price -->
+        <div class="flex justify-between text-sm mt-1">
+          <span class="text-gray-600">x{{ cartItem.quantity }}</span>
+          <span class="font-semibold text-green-600">
+            {{ cartItem.product.price * cartItem.quantity }}$
+          </span>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Footer with Total and Checkout -->
+  <div class="border-t p-6 space-y-4 bg-white">
+    <div class="flex justify-between text-base font-semibold">
+      <span>Total:</span>
+      <span class="text-green-600 text-lg"> {{ getTotalPrice() }}$ </span>
+    </div>
+    <button
+      class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded text-base font-bold cursor-pointer"
+    >
+      Checkout
+    </button>
+  </div>
+</div>
