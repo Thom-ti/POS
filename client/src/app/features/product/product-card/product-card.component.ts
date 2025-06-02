@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
@@ -10,10 +10,9 @@ import { CartService } from '../../../core/services/cart.service';
   styleUrl: './product-card.component.css',
 })
 export class ProductCardComponent {
+  private cartService = inject(CartService);
   @Input() product!: Product;
   quantity: number = 1;
-
-  constructor(private cartService: CartService) {}
 
   increaseQuantity() {
     this.quantity += 1;

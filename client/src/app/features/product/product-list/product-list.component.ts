@@ -12,9 +12,9 @@ import { CartComponent } from "../../cart/cart.component";
   styleUrl: './product-list.component.css',
 })
 export class ProductListComponent implements OnInit {
+  private productService = inject(ProductService);
   products: Product[] = [];
   filteredProducts!: Product[];
-  private productService = inject(ProductService);
   private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {

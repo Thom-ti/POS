@@ -10,14 +10,11 @@ import { Product } from '../../../core/models/product.model';
   styleUrl: './product-item.component.css',
 })
 export class ProductItemComponent implements OnInit {
+  private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
   productItem: Product | null = null;
   productId!: string;
   private destroyRef = inject(DestroyRef);
-
-  constructor(
-    private productService: ProductService,
-    private route: ActivatedRoute
-  ) {}
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {

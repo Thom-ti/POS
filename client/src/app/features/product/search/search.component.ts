@@ -16,11 +16,10 @@ import { ProductService } from '../../../core/services/product.service';
   styleUrl: './search.component.css',
 })
 export class SearchComponent {
+  private productService = inject(ProductService);
   searchTerm: string = '';
   @Output() productsFound = new EventEmitter<Product[]>();
   private destroyRef = inject(DestroyRef);
-
-  constructor(private productService: ProductService) {}
 
   onSubmit(): void {
     const keyword = this.searchTerm.trim();

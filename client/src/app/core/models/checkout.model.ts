@@ -1,6 +1,6 @@
 interface CheckoutCartItem {
   cartItemId: string;
-  productId: string;
+  product: string;
   quantity: number;
 }
 
