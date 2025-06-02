@@ -15,6 +15,7 @@ export class ProductCardComponent {
   quantity: number = 1;
 
   increaseQuantity() {
+    if (this.quantity >= this.product.stock) return;
     this.quantity += 1;
   }
 
