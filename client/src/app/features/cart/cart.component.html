@@ -19,37 +19,7 @@
 
     <!-- Cart Items -->
     @for (cartItem of cartItems(); track cartItem._id) {
-    <div class="flex items-center gap-3 border p-3 rounded bg-gray-50">
-      <!-- Image -->
-      <img
-        [src]="
-          cartItem.product.imageUrl ||
-          'https://via.placeholder.com/360x160?text=No+Image'
-        "
-        alt="{{ cartItem.product.name }}"
-        [routerLink]="'/products/' + cartItem.product._id"
-        class="w-16 h-16 object-cover object-center rounded cursor-pointer"
-      />
-
-      <!-- Info -->
-      <div class="flex flex-col flex-1">
-        <!-- Name -->
-        <a
-          [routerLink]="'/products/' + cartItem.product._id"
-          class="font-medium text-sm hover:underline hover:text-blue-600 truncate"
-        >
-          {{ cartItem.product.name }}
-        </a>
-
-        <!-- Quantity & Price -->
-        <div class="flex justify-between text-sm mt-1">
-          <span class="text-gray-600">x{{ cartItem.quantity }}</span>
-          <span class="font-semibold text-green-600">
-            {{ cartItem.product.price * cartItem.quantity }}$
-          </span>
-        </div>
-      </div>
-    </div>
+    <app-cart-item [cartItem]="cartItem" />
     }
   </div>
 

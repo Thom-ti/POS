@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { CartItemsService } from './cart-items.service';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 import { CartItemsRepository } from './cart-items.repository';
@@ -29,8 +29,8 @@ export class CartItemsController {
   //   return this.cartItemsService.update(+id, updateCartItemDto);
   // }
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.cartItemsService.remove(+id);
-  // }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.cartItemsRepository.deleteById(id);
+  }
 }

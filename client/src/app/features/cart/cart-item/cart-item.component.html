@@ -1,0 +1,39 @@
+<div class="grid grid-cols-3 gap-2 items-center border mb-2 p-4 rounded bg-gray-50 text-sm">
+  <!-- Picture -->
+  <div>
+    <img
+      [src]="
+        cartItem.product.imageUrl ||
+        'https://via.placeholder.com/360x160?text=No+Image'
+      "
+      alt="{{ cartItem.product.name }}"
+      [routerLink]="'/products/' + cartItem.product._id"
+      class="w-16 h-16 object-cover object-center rounded cursor-pointer"
+    />
+  </div>
+
+  <!-- Name & Quantity -->
+  <div class="flex flex-col space-y-1 text-center">
+    <a
+      [routerLink]="'/products/' + cartItem.product._id"
+      class="font-medium hover:underline hover:text-blue-600 truncate"
+    >
+      {{ cartItem.product.name }}
+    </a>
+    <span class="text-gray-600">x{{ cartItem.quantity }}</span>
+  </div>
+
+  <!-- Total Price & Delete -->
+  <div class="flex flex-col items-end space-y-1">
+    <span class="font-semibold text-green-600">
+      {{ cartItem.product.price * cartItem.quantity }}$
+    </span>
+    <button
+      type="button"
+      class="text-red-500 hover:text-red-700 text-xs cursor-pointer"
+      (click)="onDelete()"
+    >
+      🗑 Remove
+    </button>
+  </div>
+</div>

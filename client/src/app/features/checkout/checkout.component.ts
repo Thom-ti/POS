@@ -1,18 +1,19 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
 import { CheckoutService } from '../../core/services/checkout.service';
 import { CartService } from '../../core/services/cart.service';
 import { CheckoutRequest } from '../../core/models/checkout.model';
+import { CartItemComponent } from '../cart/cart-item/cart-item.component';
 
 @Component({
   selector: 'app-checkout',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, CartItemComponent],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
   private checkoutService = inject(CheckoutService);
   private cartService = inject(CartService);
   private router = inject(Router);
@@ -27,6 +28,10 @@ export class CheckoutComponent {
       0
     )
   );
+
+  ngOnInit() {
+    this.cartService.loadCartItems();
+  }
 
   confirmCheckout() {
     const body: CheckoutRequest = {

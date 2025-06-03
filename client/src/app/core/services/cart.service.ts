@@ -26,4 +26,11 @@ export class CartService {
       error: (err) => console.error('Add to cart failed', err),
     });
   }
+
+  removeCartItem(id: string): void {
+    this.http.delete<CartItem>(`${this.apiUrl}/${id}`).subscribe({
+      next: () => this.loadCartItems(), // reload เพื่ออัปเดต signal
+      error: (err) => console.error('Remove from cart failed', err),
+    });
+  }
 }

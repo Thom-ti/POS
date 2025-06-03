@@ -54,8 +54,4 @@ export class CartItemsService {
   // update(id: number, updateCartItemDto: UpdateCartItemDto) {
   //   return `This action updates a #${id} cartItem`;
   // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} cartItem`;
-  // }
 }

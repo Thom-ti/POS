@@ -29,33 +29,7 @@
     <!-- Cart Items -->
     <div class="flex flex-col gap-4">
       @for (cartItem of cartItems(); track cartItem._id) {
-      <div
-        class="flex items-center gap-4 border bg-white p-4 rounded shadow-sm"
-      >
-        <img
-          [src]="
-            cartItem.product.imageUrl ||
-            'https://via.placeholder.com/360x160?text=No+Image'
-          "
-          alt="{{ cartItem.product.name }}"
-          [routerLink]="'/products/' + cartItem.product._id"
-          class="w-20 h-20 object-cover object-center rounded cursor-pointer"
-        />
-        <div class="flex flex-col flex-1">
-          <a
-            [routerLink]="'/products/' + cartItem.product._id"
-            class="font-medium text-base text-gray-800 hover:underline hover:text-blue-600 truncate"
-          >
-            {{ cartItem.product.name }}
-          </a>
-          <div class="flex justify-between mt-1 text-sm">
-            <span class="text-gray-600">x{{ cartItem.quantity }}</span>
-            <span class="text-green-600 font-semibold">
-              {{ cartItem.product.price * cartItem.quantity }}$
-            </span>
-          </div>
-        </div>
-      </div>
+      <app-cart-item [cartItem]="cartItem" />
       }
     </div>
 
@@ -82,12 +56,21 @@
         </select>
       </div>
 
+      @if (cartItems().length > 0) {
       <button
         (click)="confirmCheckout()"
         class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded text-base font-bold cursor-pointer"
       >
         Confirm Order
       </button>
+      } @else {
+      <button
+        disabled
+        class="w-full bg-gray-400 text-white py-3 rounded text-base font-bold cursor-not-allowed"
+      >
+        Confirm Order
+      </button>
+      }
     </div>
   </div>
 </div>
