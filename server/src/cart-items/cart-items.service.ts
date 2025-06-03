@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -47,6 +48,11 @@ export class CartItemsService {
       return this.cartItemsRepository.create(dto);
     } catch (error) {
       this.logger.error(error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Something went wrong');
     }
   }

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -23,6 +24,11 @@ export class ProductsService {
       return this.productsRepository.findByKeyword(keyword);
     } catch (error) {
       this.logger.error(error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Something went wrong');
     }
   }
@@ -36,6 +42,11 @@ export class ProductsService {
       return product;
     } catch (error) {
       this.logger.error(error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Something went wrong');
     }
   }

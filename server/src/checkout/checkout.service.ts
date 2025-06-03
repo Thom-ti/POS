@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -50,6 +51,11 @@ export class CheckoutService {
       }
     } catch (error) {
       this.logger.error(error);
+
+      if (error instanceof HttpException) {
+        throw error;
+      }
+
       throw new InternalServerErrorException('Something went wrong');
     }
   }
