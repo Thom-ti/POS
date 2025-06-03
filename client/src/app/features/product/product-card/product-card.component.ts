@@ -1,5 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+
 import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
 
@@ -11,6 +13,8 @@ import { CartService } from '../../../core/services/cart.service';
 })
 export class ProductCardComponent {
   private cartService = inject(CartService);
+  private toastr = inject(ToastrService);
+
   @Input() product!: Product;
   quantity: number = 1;
 
@@ -30,6 +34,12 @@ export class ProductCardComponent {
       quantity: this.quantity,
     };
 
-    this.cartService.postCartItem(body);
+    this.cartService.postCartItem(body).subscribe({
+      next: () => this.toastr.success('เพิ่มสินค้าในตะกร้าแล้ว'),
+      error: (err) => {
+        const msg = err?.error?.message || 'เพิ่มสินค้าไม่สำเร็จ';
+        this.toastr.error(msg);
+      },
+    });
   }
 }

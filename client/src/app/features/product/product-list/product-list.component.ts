@@ -13,9 +13,10 @@ import { CartComponent } from "../../cart/cart.component";
 })
 export class ProductListComponent implements OnInit {
   private productService = inject(ProductService);
+  private destroyRef = inject(DestroyRef);
+  
   products: Product[] = [];
   filteredProducts!: Product[];
-  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.loadProducts();
