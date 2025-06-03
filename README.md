@@ -28,10 +28,16 @@ MONGODB_URL=mongodb+srv://thomdev:OI8DZyaD5z6wvrQ0@cluster-ti.thoo734.mongodb.ne
 ## Frontend & Backend setup with `docker-compose.yml`
 
 ```bash
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 เมื่อรันเสร็จแล้ว เปิดบราวเซอร์และไปที่ `http://localhost:4200/`
+
+## Down Container
+
+```bash
+docker-compose down	-v
+```
 
 ---
 
