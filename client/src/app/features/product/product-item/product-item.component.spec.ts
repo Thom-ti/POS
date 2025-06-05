@@ -1,20 +1,19 @@
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
 } from '@angular/core/testing';
-import { ProductItemComponent } from './product-item.component';
-import { ProductService } from '../../../core/services/product.service';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { Product } from '../../../core/models/product.model';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
+import { ProductItemComponent } from './product-item.component';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.model';
+
 describe('ProductItemComponent (Standalone)', () => {
-  let fixture: ComponentFixture<ProductItemComponent>;
   let component: ProductItemComponent;
+  let fixture: ComponentFixture<ProductItemComponent>;
 
   const mockProduct: Product = {
     _id: 'mock-id',
@@ -37,18 +36,18 @@ describe('ProductItemComponent (Standalone)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProductItemComponent], // ✅ Standalone component
+      imports: [ProductItemComponent],
       providers: [
         { provide: ProductService, useValue: mockProductService },
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         provideHttpClient(),
         provideRouter([]),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(ProductItemComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
   it('should load product with given ID directly', () => {

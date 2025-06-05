@@ -10,7 +10,7 @@ import { CartService } from '../../../core/services/cart.service';
 
 describe('ProductCardComponent', () => {
   let component: ProductCardComponent;
-  let fixture: ComponentFixture<ProductCardComponent>;
+  let fixture: ComponentFixture<ProductCardComponent>; // fixture = ตัวควบคุม component ที่ถูกสร้างขึ้นจาก test module
 
   const mockProduct: Product = {
     _id: 'abc123',
@@ -34,17 +34,17 @@ describe('ProductCardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProductCardComponent],
       providers: [
-        provideHttpClient(),
-        provideRouter([]),
         { provide: CartService, useValue: mockCartService },
         { provide: ToastrService, useValue: mockToastr },
+        provideHttpClient(),
+        provideRouter([]),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(ProductCardComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
     component.product = mockProduct;
-    fixture.detectChanges();
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
   it('should increase quantity if below stock', () => {

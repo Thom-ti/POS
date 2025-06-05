@@ -1,16 +1,17 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { CartComponent } from './cart.component';
-import { CartService } from '../../core/services/cart.service';
-import { ToastrService } from 'ngx-toastr';
+import { signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { signal } from '@angular/core';
 import { of, throwError } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
+import { CartComponent } from './cart.component';
+import { CartService } from '../../core/services/cart.service';
 import { CartItem } from '../../core/models/cart-item.model';
 
 describe('CartComponent', () => {
-  let fixture: ComponentFixture<CartComponent>;
   let component: CartComponent;
+  let fixture: ComponentFixture<CartComponent>;
 
   const mockCartItems: CartItem[] = [
     {
@@ -54,11 +55,11 @@ describe('CartComponent', () => {
         provideHttpClient(),
         provideRouter([]),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(CartComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
   it('should create component', () => {
@@ -71,22 +72,28 @@ describe('CartComponent', () => {
   });
 
   it('should compute total price correctly', () => {
-    const expectedTotal = 100 * 2 + 200 * 1; // 400
+    const expectedTotal = 100 * 2 + 200 * 1;
     expect(component.totalPrice()).toBe(expectedTotal);
   });
+});
 
-  it('should show error toast on loadCartItems failure', waitForAsync(() => {
-    const failService = {
-      cartItems: signal<CartItem[]>([]),
-      loadCartItems: jasmine
-        .createSpy()
-        .and.returnValue(
-          throwError(() => ({ error: { message: 'โหลดล้มเหลว' } }))
-        ),
-    };
+describe('CartComponent - failure case', () => {
+  const mockToastr = {
+    success: jasmine.createSpy('success'),
+    error: jasmine.createSpy('error'),
+  };
 
-    TestBed.resetTestingModule();
-    TestBed.configureTestingModule({
+  const failService = {
+    cartItems: signal<CartItem[]>([]),
+    loadCartItems: jasmine
+      .createSpy('loadCartItems')
+      .and.returnValue(throwError(() => ({ error: { message: 'โหลดล้มเหลว' } }))),
+  };
+
+  let failFixture: ComponentFixture<CartComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [CartComponent],
       providers: [
         { provide: CartService, useValue: failService },
@@ -94,13 +101,13 @@ describe('CartComponent', () => {
         provideHttpClient(),
         provideRouter([]),
       ],
-    })
-      .compileComponents()
-      .then(() => {
-        const failFixture = TestBed.createComponent(CartComponent);
-        failFixture.detectChanges();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
-        expect(mockToastr.error).toHaveBeenCalledWith('โหลดล้มเหลว');
-      });
-  }));
+    failFixture = TestBed.createComponent(CartComponent);
+    failFixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
+  });
+
+  it('should show error toast on loadCartItems failure', () => {
+    expect(mockToastr.error).toHaveBeenCalledWith('โหลดล้มเหลว');
+  });
 });

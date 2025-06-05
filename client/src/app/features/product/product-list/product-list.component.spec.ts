@@ -1,8 +1,7 @@
 import {
   ComponentFixture,
   TestBed,
-  fakeAsync,
-  tick,
+  waitForAsync,
 } from '@angular/core/testing';
 import { Component } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
@@ -25,8 +24,8 @@ class MockProductCardComponent {}
 class MockCartComponent {}
 
 describe('ProductListComponent', () => {
-  let fixture: ComponentFixture<ProductListComponent>;
   let component: ProductListComponent;
+  let fixture: ComponentFixture<ProductListComponent>;
 
   const mockProducts: Product[] = [
     { _id: '1', name: 'Item A', price: 100, stock: 10 },
@@ -56,15 +55,14 @@ describe('ProductListComponent', () => {
         provideHttpClient(),
         provideRouter([]),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(ProductListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
-  it('should load products on init', fakeAsync(() => {
-    tick(); // wait for observable
+  it('should load products on init', waitForAsync(() => {
     expect(mockProductService.getProducts).toHaveBeenCalled();
     expect(component.products).toEqual(mockProducts);
   }));

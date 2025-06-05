@@ -2,16 +2,17 @@ import {
   ComponentFixture,
   TestBed,
 } from '@angular/core/testing';
-import { SearchComponent } from './search.component';
-import { ProductService } from '../../../core/services/product.service';
 import { provideHttpClient } from '@angular/common/http';
-import { Product } from '../../../core/models/product.model';
 import { NgForm } from '@angular/forms';
 import { of } from 'rxjs';
 
+import { SearchComponent } from './search.component';
+import { ProductService } from '../../../core/services/product.service';
+import { Product } from '../../../core/models/product.model';
+
 describe('SearchComponent', () => {
-  let fixture: ComponentFixture<SearchComponent>;
   let component: SearchComponent;
+  let fixture: ComponentFixture<SearchComponent>;
 
   const mockProducts: Product[] = [
     { _id: '1', name: 'A', price: 10, stock: 1 },
@@ -29,11 +30,11 @@ describe('SearchComponent', () => {
         { provide: ProductService, useValue: mockProductService },
         provideHttpClient(),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(SearchComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
   it('should call productService and emit products on submit', () => {

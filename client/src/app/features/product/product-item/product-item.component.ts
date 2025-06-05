@@ -12,6 +12,7 @@ import { Product } from '../../../core/models/product.model';
 export class ProductItemComponent implements OnInit {
   private productService = inject(ProductService);
   private route = inject(ActivatedRoute);
+  
   productItem: Product | null = null;
   productId!: string;
   private destroyRef = inject(DestroyRef);

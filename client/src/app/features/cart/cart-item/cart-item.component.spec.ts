@@ -1,15 +1,16 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { CartItemComponent } from './cart-item.component';
-import { CartService } from '../../../core/services/cart.service';
-import { ToastrService } from 'ngx-toastr';
-import { CartItem } from '../../../core/models/cart-item.model';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
+import { CartItemComponent } from './cart-item.component';
+import { CartService } from '../../../core/services/cart.service';
+import { CartItem } from '../../../core/models/cart-item.model';
 
 describe('CartItemComponent (via DOM)', () => {
-  let fixture: ComponentFixture<CartItemComponent>;
   let component: CartItemComponent;
+  let fixture: ComponentFixture<CartItemComponent>;
 
   const mockCartItem: CartItem = {
     _id: 'item123',
@@ -40,12 +41,12 @@ describe('CartItemComponent (via DOM)', () => {
         provideHttpClient(),
         provideRouter([]),
       ],
-    }).compileComponents();
+    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
 
     fixture = TestBed.createComponent(CartItemComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
     component.cartItem = mockCartItem;
-    fixture.detectChanges();
+    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
   it('should delete and show toast via button click', waitForAsync(() => {
