@@ -28,7 +28,7 @@ export class CheckoutService {
 
         if (item.quantity > product.stock) {
           throw new BadRequestException(
-            `Quantity for ${product.name} exceeds stock`,
+            `Quantity for ${product.name} exceeds stock (stock: ${product.stock})`,
           );
         }
 
