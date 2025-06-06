@@ -1,8 +1,9 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CartItem } from '../models/cart-item.model';
-import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { CartItem } from '../models/cart-item.model';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
