@@ -11,7 +11,7 @@ import { ProductItemComponent } from './product-item.component';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 
-describe('ProductItemComponent (Standalone)', () => {
+describe('ProductItemComponent', () => {
   let component: ProductItemComponent;
   let fixture: ComponentFixture<ProductItemComponent>;
 
@@ -48,6 +48,10 @@ describe('ProductItemComponent (Standalone)', () => {
     fixture = TestBed.createComponent(ProductItemComponent);
     component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
     fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
+  });
+
+  it('should create component', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should load product with given ID directly', () => {

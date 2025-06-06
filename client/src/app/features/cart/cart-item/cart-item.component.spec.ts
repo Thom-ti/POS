@@ -49,6 +49,10 @@ describe('CartItemComponent (via DOM)', () => {
     fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
+  it('should create component', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should delete and show toast via button click', waitForAsync(() => {
     const deleteBtn = fixture.nativeElement.querySelector('button');
     deleteBtn.click();

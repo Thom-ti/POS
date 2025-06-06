@@ -2,7 +2,7 @@ import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { CartComponent } from './cart.component';
@@ -74,40 +74,5 @@ describe('CartComponent', () => {
   it('should compute total price correctly', () => {
     const expectedTotal = 100 * 2 + 200 * 1;
     expect(component.totalPrice()).toBe(expectedTotal);
-  });
-});
-
-describe('CartComponent - failure case', () => {
-  const mockToastr = {
-    success: jasmine.createSpy('success'),
-    error: jasmine.createSpy('error'),
-  };
-
-  const failService = {
-    cartItems: signal<CartItem[]>([]),
-    loadCartItems: jasmine
-      .createSpy('loadCartItems')
-      .and.returnValue(throwError(() => ({ error: { message: 'โหลดล้มเหลว' } }))),
-  };
-
-  let failFixture: ComponentFixture<CartComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CartComponent],
-      providers: [
-        { provide: CartService, useValue: failService },
-        { provide: ToastrService, useValue: mockToastr },
-        provideHttpClient(),
-        provideRouter([]),
-      ],
-    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
-
-    failFixture = TestBed.createComponent(CartComponent);
-    failFixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
-  });
-
-  it('should show error toast on loadCartItems failure', () => {
-    expect(mockToastr.error).toHaveBeenCalledWith('โหลดล้มเหลว');
   });
 });

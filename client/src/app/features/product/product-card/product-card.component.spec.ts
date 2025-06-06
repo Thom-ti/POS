@@ -47,6 +47,10 @@ describe('ProductCardComponent', () => {
     fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
+  it('should create component', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should increase quantity if below stock', () => {
     component.quantity = 1;
     component.increaseQuantity();

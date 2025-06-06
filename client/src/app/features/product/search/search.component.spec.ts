@@ -37,6 +37,10 @@ describe('SearchComponent', () => {
     fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
   });
 
+  it('should create component', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('should call productService and emit products on submit', () => {
     const emitSpy = spyOn(component.productsFound, 'emit');
 
@@ -44,7 +48,9 @@ describe('SearchComponent', () => {
     component.onSubmit();
 
     expect(mockProductService.getProductsBySearching).toHaveBeenCalledWith('A');
+    expect(mockProductService.getProductsBySearching).toHaveBeenCalledTimes(1);
     expect(emitSpy).toHaveBeenCalledWith(mockProducts);
+    expect(emitSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should clear searchTerm and emit empty on clear', () => {

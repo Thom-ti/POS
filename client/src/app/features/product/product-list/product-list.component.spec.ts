@@ -14,13 +14,13 @@ import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 
 // 🔹 Mock child components
-@Component({ selector: 'app-search', standalone: true, template: '' })
+@Component({ selector: 'app-search', template: '' })
 class MockSearchComponent {}
 
-@Component({ selector: 'app-product-card', standalone: true, template: '' })
+@Component({ selector: 'app-product-card', template: '' })
 class MockProductCardComponent {}
 
-@Component({ selector: 'app-cart', standalone: true, template: '' })
+@Component({ selector: 'app-cart', template: '' })
 class MockCartComponent {}
 
 describe('ProductListComponent', () => {
@@ -60,6 +60,10 @@ describe('ProductListComponent', () => {
     fixture = TestBed.createComponent(ProductListComponent);
     component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
     fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
+  });
+
+  it('should create component', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should load products on init', waitForAsync(() => {
