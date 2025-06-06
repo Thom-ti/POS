@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
@@ -92,5 +93,57 @@ describe('Checkout Integration (e2e) with MongoMemoryServer', () => {
     expect(res.body).toEqual({
       message: 'Checkout successful by card',
     });
+  });
+
+  it('should fail if stock is insufficient', async () => {
+    const product = await productModel.create({
+      name: 'Tenga',
+      price: 100,
+      stock: 1,
+      description: 'Too little',
+    });
+
+    const cartItem = await cartItemModel.create({
+      product: product._id,
+      quantity: 5, // > stock
+    });
+
+    const payload = {
+      cartItems: [
+        {
+          cartItemId: cartItem._id.toString(),
+          product: product._id.toString(),
+          quantity: 5,
+        },
+      ],
+      paymentMethod: 'card',
+    };
+
+    const res = await request(app.getHttpServer())
+      .post('/checkout')
+      .send(payload)
+      .expect(400);
+
+    expect(res.body.message).toBe(
+      `Quantity for Tenga exceeds stock (stock: 1)`,
+    );
+  });
+
+  it('should return 404 if cartItemId does not exist', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/checkout')
+      .send({
+        cartItems: [
+          {
+            cartItemId: '666666666666666666666666',
+            product: '666666666666666666666666',
+            quantity: 1,
+          },
+        ],
+        paymentMethod: 'cash',
+      })
+      .expect(404);
+
+    expect(res.body.message).toBe('Product 666666666666666666666666 not found');
   });
 });

@@ -21,6 +21,7 @@ describe('CartItems Integration (e2e) with MongoMemoryServer', () => {
   let app: INestApplication;
   let mongod: MongoMemoryServer;
   let connection: Connection;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let cartItemModel: Model<CartItem>;
   let productModel: Model<Product>;
   let createdItem: any;
@@ -83,6 +84,21 @@ describe('CartItems Integration (e2e) with MongoMemoryServer', () => {
       expect(res.body.quantity).toBe(createDto.quantity);
 
       createdItem = res.body; // ✅ เก็บไว้ใช้ต่อ
+    });
+
+    it('should return 400 for invalid quantity', async () => {
+      const product = await productModel.create({
+        name: 'Invalid Quantity Test',
+        price: 50,
+        stock: 10,
+        description: 'Test',
+      });
+
+      const res = await request(app.getHttpServer())
+        .post('/cart-items')
+        .send({ product: product._id.toString(), quantity: -1 });
+
+      expect(res.status).toBe(400); // จาก ValidationPipe
     });
   });
 
