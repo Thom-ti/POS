@@ -6,9 +6,9 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { ProductsRepository } from 'src/products/products.repository';
+import { ProductsRepository } from '../products/products.repository';
 import { CheckoutDto } from './dto/checkout.dto';
-import { CartItemsRepository } from 'src/cart-items/cart-items.repository';
+import { CartItemsRepository } from '../cart-items/cart-items.repository';
 
 @Injectable()
 export class CheckoutService {

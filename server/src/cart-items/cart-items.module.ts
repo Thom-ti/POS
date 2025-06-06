@@ -4,8 +4,8 @@ import { CartItemsController } from './cart-items.controller';
 import { CartItemsService } from './cart-items.service';
 import { CartItemsRepository } from './cart-items.repository';
 import { CartItem, CartItemSchema } from './schema/cart-item.schema';
-import { ProductsRepository } from 'src/products/products.repository';
-import { Product, ProductSchema } from 'src/products/schema/product.schema';
+import { ProductsRepository } from '../products/products.repository';
+import { Product, ProductSchema } from '../products/schema/product.schema';
 
 @Module({
   imports: [

@@ -3,13 +3,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CheckoutController } from './checkout.controller';
 import { CheckoutService } from './checkout.service';
 import { CheckoutRepository } from './checkout.repository';
-import { CartItemsRepository } from 'src/cart-items/cart-items.repository';
-import { ProductsRepository } from 'src/products/products.repository';
+import { CartItemsRepository } from '../cart-items/cart-items.repository';
+import { ProductsRepository } from '../products/products.repository';
 import {
   CartItem,
   CartItemSchema,
-} from 'src/cart-items/schema/cart-item.schema';
-import { Product, ProductSchema } from 'src/products/schema/product.schema';
+} from '../cart-items/schema/cart-item.schema';
+import { Product, ProductSchema } from '../products/schema/product.schema';
 
 @Module({
   imports: [

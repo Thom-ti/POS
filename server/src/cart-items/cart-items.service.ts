@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CartItemsRepository } from './cart-items.repository';
-import { ProductsRepository } from 'src/products/products.repository';
+import { ProductsRepository } from '../products/products.repository';
 import { CreateCartItemDto } from './dto/create-cart-item.dto';
 // import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
