@@ -1,69 +1,86 @@
-import {
-  ComponentFixture,
-  TestBed,
-} from '@angular/core/testing';
-import { provideHttpClient } from '@angular/common/http';
-import { NgForm } from '@angular/forms';
-import { of } from 'rxjs';
-
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchComponent } from './search.component';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ProductService } from '../../../core/services/product.service';
+import { of } from 'rxjs';
 import { Product } from '../../../core/models/product.model';
+import { By } from '@angular/platform-browser';
 
 describe('SearchComponent', () => {
   let component: SearchComponent;
   let fixture: ComponentFixture<SearchComponent>;
+  let productServiceSpy: jasmine.SpyObj<ProductService>;
 
-  const mockProducts: Product[] = [
-    { _id: '1', name: 'A', price: 10, stock: 1 },
-    { _id: '2', name: 'B', price: 20, stock: 2 },
-  ];
+  beforeEach(() => {
+    const mockProductService = jasmine.createSpyObj('ProductService', [
+      'getProductsBySearching',
+    ]);
 
-  const mockProductService = {
-    getProductsBySearching: jasmine.createSpy().and.returnValue(of(mockProducts)),
-  };
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [SearchComponent],
-      providers: [
-        { provide: ProductService, useValue: mockProductService },
-        provideHttpClient(),
-      ],
-    }).compileComponents(); // สร้าง "module จำลอง" เพื่อเทส Component
+    TestBed.configureTestingModule({
+      imports: [FormsModule, SearchComponent],
+      providers: [{ provide: ProductService, useValue: mockProductService }],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SearchComponent);
-    component = fixture.componentInstance; // fixture.componentInstance → เข้าถึง instance (เหมือน this ของ component)
-    fixture.detectChanges(); // fixture.detectChanges() → trigger Angular lifecycle (ngOnInit, re-render)
+    component = fixture.componentInstance;
+    productServiceSpy = TestBed.inject(
+      ProductService
+    ) as jasmine.SpyObj<ProductService>;
+    fixture.detectChanges();
   });
 
-  it('should create component', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call productService and emit products on submit', () => {
+  it('should emit products on submit with valid search term', () => {
+    const dummyProducts: Product[] = [{ name: 'Test Product' } as Product];
+    const searchTerm = 'test';
     const emitSpy = spyOn(component.productsFound, 'emit');
 
-    component.searchTerm = 'A';
+    component.searchTerm = searchTerm;
+    productServiceSpy.getProductsBySearching.and.returnValue(of(dummyProducts));
+
     component.onSubmit();
 
-    expect(mockProductService.getProductsBySearching).toHaveBeenCalledWith('A');
-    expect(mockProductService.getProductsBySearching).toHaveBeenCalledTimes(1);
-    expect(emitSpy).toHaveBeenCalledWith(mockProducts);
-    expect(emitSpy).toHaveBeenCalledTimes(1);
+    expect(productServiceSpy.getProductsBySearching).toHaveBeenCalledWith(
+      searchTerm
+    );
+    expect(emitSpy).toHaveBeenCalledWith(dummyProducts);
   });
 
-  it('should clear searchTerm and emit empty on clear', () => {
+  it('should emit undefined and reset form on clear', () => {
     const emitSpy = spyOn(component.productsFound, 'emit');
-    const mockForm = {
-      resetForm: jasmine.createSpy(),
-    } as any as NgForm;
+    const formDirective = {
+      resetForm: jasmine.createSpy('resetForm'),
+    } as unknown as NgForm;
 
     component.searchTerm = 'test';
-    component.onClear(mockForm);
+    component.onClear(formDirective);
 
     expect(component.searchTerm).toBe('');
-    expect(mockForm.resetForm).toHaveBeenCalled();
+    expect(formDirective.resetForm).toHaveBeenCalled();
     expect(emitSpy).toHaveBeenCalledWith();
+  });
+
+  it('should call onSubmit when form is submitted via template', () => {
+    const submitSpy = spyOn(component, 'onSubmit');
+    fixture.detectChanges();
+
+    const form = fixture.debugElement.query(By.css('form'));
+    form.triggerEventHandler('ngSubmit', {});
+    expect(submitSpy).toHaveBeenCalled();
+  });
+
+  it('should call onClear when ❌ button is clicked', () => {
+    const clearSpy = spyOn(component, 'onClear').and.callThrough();
+    const formElement = fixture.debugElement.query(By.css('form')).references[
+      'searchForm'
+    ];
+
+    const clearButton = fixture.debugElement.queryAll(By.css('button'))[1];
+    clearButton.triggerEventHandler('click', null);
+
+    expect(clearSpy).toHaveBeenCalled();
   });
 });

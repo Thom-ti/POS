@@ -13,7 +13,6 @@ import { ProductListComponent } from './product-list.component';
 import { ProductService } from '../../../core/services/product.service';
 import { Product } from '../../../core/models/product.model';
 
-// 🔹 Mock child components
 @Component({ selector: 'app-search', template: '' })
 class MockSearchComponent {}
 
