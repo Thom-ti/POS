@@ -23,7 +23,7 @@ export class ProductsRepository {
       .exec();
   }
 
-  async findById(id: string): Promise<Product | null> {
-    return this.productsModel.findById(id).lean().exec();
+  async findById(id: string): Promise<ProductDocument | null> {
+    return this.productsModel.findById(id).exec();
   }
 }
