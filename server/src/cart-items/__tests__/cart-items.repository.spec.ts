@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 
 import { CartItemsRepository } from '../cart-items.repository';
-import { CartItem, CartItemDocument } from '../schema/cart-item.schema';
+import { CartItem } from '../schema/cart-item.schema';
 import { CreateCartItemDto } from '../dto/create-cart-item.dto';
 
 describe('CartItemsRepository', () => {
@@ -17,34 +16,27 @@ describe('CartItemsRepository', () => {
 
   const mockCartItems = [mockCartItem];
 
-  // global mocks
   const saveMock = jest.fn();
   const execMock = jest.fn();
   const populateMock = jest.fn();
   const leanMock = jest.fn();
 
-  const mockModel: Partial<Record<keyof Model<CartItemDocument>, any>> = {
-    // Used in: findAll
-    find: jest.fn().mockImplementation(() => ({
-      populate: populateMock,
-    })),
-
-    // Used in: findOne
-    findOne: jest.fn().mockImplementation(() => ({
-      lean: leanMock,
-    })),
-
-    // Used in: deleteById
-    findByIdAndDelete: jest.fn().mockImplementation(() => ({
-      lean: leanMock,
-    })),
+  const mockModel = {
+    find: jest.fn(),
+    findOne: jest.fn(),
+    findByIdAndDelete: jest.fn(),
   };
 
   beforeEach(async () => {
-    saveMock.mockClear();
-    execMock.mockClear();
-    leanMock.mockReturnValue({ exec: execMock });
+    jest.resetAllMocks();
+
+    // bind mock chain AFTER mock functions exist
     populateMock.mockReturnValue({ exec: execMock });
+    leanMock.mockReturnValue({ exec: execMock });
+
+    mockModel.find.mockReturnValue({ populate: populateMock });
+    mockModel.findOne.mockReturnValue({ lean: leanMock });
+    mockModel.findByIdAndDelete.mockReturnValue({ lean: leanMock });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -53,7 +45,6 @@ describe('CartItemsRepository', () => {
           provide: getModelToken(CartItem.name),
           useValue: {
             ...mockModel,
-            // For create() only
             constructor: jest.fn(),
           },
         },
@@ -64,7 +55,7 @@ describe('CartItemsRepository', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('create', () => {

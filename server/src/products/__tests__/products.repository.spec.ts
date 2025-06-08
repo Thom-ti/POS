@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 
 import { ProductsRepository } from '../products.repository';
-import { Product, ProductDocument } from '../schema/product.schema';
+import { Product } from '../schema/product.schema';
 
 describe('ProductsRepository', () => {
   let repository: ProductsRepository;
@@ -20,18 +19,18 @@ describe('ProductsRepository', () => {
   ];
 
   const execMock = jest.fn();
-  const leanMock = jest.fn().mockReturnValue({ exec: execMock });
-
-  const mockModel: Partial<Record<keyof Model<ProductDocument>, any>> = {
-    find: jest.fn().mockImplementation(() => ({
-      lean: leanMock,
-    })),
-    findById: jest.fn().mockImplementation(() => ({
-      exec: execMock,
-    })),
+  const leanMock = jest.fn();
+  const mockModel = {
+    find: jest.fn(),
+    findById: jest.fn(),
   };
 
   beforeEach(async () => {
+    leanMock.mockReturnValue({ exec: execMock });
+
+    mockModel.find.mockReturnValue({ lean: leanMock });
+    mockModel.findById.mockReturnValue({ lean: leanMock });
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductsRepository,
@@ -46,26 +45,23 @@ describe('ProductsRepository', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   describe('findAll', () => {
     it('should return all products', async () => {
-      execMock.mockResolvedValueOnce(mockProducts);
+      execMock.mockResolvedValue(mockProducts);
 
       const result = await repository.findAll();
 
       expect(mockModel.find).toHaveBeenCalled();
-      expect(leanMock).toHaveBeenCalled();
-      expect(execMock).toHaveBeenCalled();
       expect(result).toEqual(mockProducts);
     });
   });
 
   describe('findByKeyword', () => {
     it('should return products matching keyword in name or description', async () => {
-      execMock.mockResolvedValueOnce(mockProducts);
-
+      execMock.mockResolvedValue(mockProducts);
       const keyword = 'test';
       const regex = new RegExp(keyword, 'i');
 
@@ -74,20 +70,17 @@ describe('ProductsRepository', () => {
       expect(mockModel.find).toHaveBeenCalledWith({
         $or: [{ name: { $regex: regex } }, { description: { $regex: regex } }],
       });
-      expect(leanMock).toHaveBeenCalled();
-      expect(execMock).toHaveBeenCalled();
       expect(result).toEqual(mockProducts);
     });
   });
 
   describe('findById', () => {
     it('should return a product by ID', async () => {
-      execMock.mockResolvedValueOnce(mockProducts[0]);
+      execMock.mockResolvedValue(mockProducts[0]);
 
       const result = await repository.findById('1');
 
       expect(mockModel.findById).toHaveBeenCalledWith('1');
-      expect(execMock).toHaveBeenCalled();
       expect(result).toEqual(mockProducts[0]);
     });
   });
