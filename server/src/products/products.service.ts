@@ -15,13 +15,13 @@ export class ProductsService {
     private readonly productsRepository: ProductsRepository,
   ) {}
 
-  getProductsBySearching(keyword: string) {
+  async getProductsBySearching(keyword: string) {
     try {
       if (!keyword || keyword.trim() === '') {
         throw new BadRequestException('Keyword is required');
       }
 
-      return this.productsRepository.findByKeyword(keyword);
+      return await this.productsRepository.findByKeyword(keyword);
     } catch (error) {
       this.logger.error(error);
 
